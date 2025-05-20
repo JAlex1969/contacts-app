@@ -13,6 +13,9 @@ class PersonController extends Controller
     public function index()
     {
         //
+        $people = Person::all();
+
+        return view('person.index')->with('people', $people);
     }
 
     /**
@@ -21,6 +24,7 @@ class PersonController extends Controller
     public function create()
     {
         //
+        return view ('person.create');
     }
 
     /**
@@ -29,6 +33,21 @@ class PersonController extends Controller
     public function store(Request $request)
     {
         //
+        $validatedData = $request->validate([
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|max:15',
+        ]);
+        
+        $person = new Person();
+        $person->firstname = $validatedData['firstname'];
+        $person->lastname = $validatedData['lastname'];
+        $person->email = $validatedData['email'];
+        $person->phone = $validatedData['phone'];
+        $person->save();
+
+        return redirect()->route('person.index');
     }
 
     /**
@@ -36,7 +55,7 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        //
+        
     }
 
     /**
